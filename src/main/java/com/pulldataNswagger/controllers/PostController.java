@@ -23,6 +23,10 @@ public class PostController {
     private CommentService commentService;
 
     @Operation(summary = "Get all posts",description = "Return all posts. ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the posts"),
+            @ApiResponse(responseCode = "404", description = "Posts not found")
+    })
     @GetMapping("/posts")
     public List<Post> getPosts() {
         return postService.getPosts();
@@ -34,15 +38,27 @@ public class PostController {
             @ApiResponse(responseCode = "404", description = "Post not found")
     })
     @GetMapping("/posts/{id}")
-    public Post getPostById(@PathVariable("id") int id){
-        return postService.getPostById(id);
+    public ResponseEntity<Post> getPostById(@PathVariable("id") int id){
+        Post post = postService.getPostById(id);
+        if (post == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(post);
     }
     @Operation(summary = "Get by post comment",description = "Return all post comments. ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the posts comments"),
+            @ApiResponse(responseCode = "404", description = "Post comments not found")
+    })
     @GetMapping("/posts/{id}/comments")
     public List<Comment> getPostByIdComments(@PathVariable("id") int id){
         return commentService.getPostByIdComments(id);
     }
     @Operation(summary = "Delete a post by ID",description = "Deleted single post with id. ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deleted the post"),
+            @ApiResponse(responseCode = "404", description = "Posts could not be deleted")
+    })
     @DeleteMapping("posts/{id}")
     public ResponseEntity<String> deletePost(@PathVariable("id") Long id)
     {
