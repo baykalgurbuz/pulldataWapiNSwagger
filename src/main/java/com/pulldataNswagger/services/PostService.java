@@ -1,6 +1,7 @@
 package com.pulldataNswagger.services;
 
 import com.pulldataNswagger.models.Post;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -13,8 +14,8 @@ import java.util.List;
 public class PostService {
 
     private final RestTemplate restTemplate;
-    //Bu api ı application propertiese tası her yerde kullan
-    private final String apiUrl = "https://jsonplaceholder.typicode.com/posts/";
+    @Value("${api.url}")
+    private  String apiUrl ;
     public PostService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
@@ -29,7 +30,7 @@ public class PostService {
     }
     public void deletePost(Long id)
     {
-        String url = apiUrl + "/" + id;
+        String url = apiUrl + id;
         RestTemplate restTemplate = new RestTemplate();
         try {
             restTemplate.delete(url);
