@@ -46,4 +46,10 @@ public class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+    @Test
+    public void testGetPostById_InvalidId() throws Exception {
+        mockMvc.perform(get("/api/posts/-1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }
